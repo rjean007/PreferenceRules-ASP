@@ -11,11 +11,17 @@ def handler(signum, frame):
 
 signal.signal(signal.SIGALRM, handler)
 
-path = os.getcwd()
-data = "u1conf1_meta.lp"
-method = "going_up"  #choose from "going_up", "going_down" or "grounded_extension" 
 conf_type = "non_binary"  #choose either "non_binary" or "binary"
-scenario = "a" #choose one from "a", "b", "c" or "d"
+method = "going_up"  #choose from "going_up", "going_down" or "grounded_extension" 
+
+path = os.getcwd()
+input = f"{path}/data/u1conf1_meta.lp" #your data lp file path
+conflicts = f"{path}/conflicts/u1conf1_conf_{conf_type}_minPython.lp" #your conflicts lp file path
+preference_rules = f"{path}/lp_programs/preference_rules_a.lp" #your preference rules lp file path (here scenario a)
+
+output = f"{path}/preferences/u1conf1_pref_a_{method}_{conf_type}.lp" #your output file path
+log_path =  f"{path}/experimental_results/results/log_pref_a_u1conf1_{method}_{conf_type}.lp"  #your log file path
+
 
 
 def test(prog): 
@@ -38,16 +44,15 @@ def test(prog):
 def d_name(n): return(n.split("_meta.lp")[0])
 
 
-data_name = d_name(data)
 program = ""
 
-with open(f"{path}/data/{data}", "r") as univ:
+with open(input, "r") as univ:
     program += univ.read()
 
-with open(f"{path}/conflicts/{data_name}_conf_{conf_type}_minPython.lp", "r") as conf:
+with open(conflicts, "r") as conf:
     program += conf.read()
 
-with open(f"{path}/lp_programs/preference_rules_{scenario}.lp", "r") as pref:
+with open(preference_rules, "r") as pref:
     program += pref.read()
 
 with open(f"{path}/lp_programs/{method}.lp", "r") as file:
@@ -61,7 +66,7 @@ try:
     pref, pref_init = 0, 0
 
 
-    with open(f"{path}/preferences/{data_name}_pref_all_{method}_{conf_type}.lp" , "w") as file:
+    with open(output , "w") as file:
         for assertion in model:
                 if str(assertion).startswith("pref("):
                     pref +=1
@@ -69,8 +74,8 @@ try:
                 elif str(assertion).startswith("pref_init("):
                     pref_init += 1
 
-    log = open(f"{path}/experimental_results/results/log_pref_all_{data_name}_{method}_{conf_type}.lp" , "w")
-    log.write(f"Data treated: {data} \n")
+    log = open(log_path , "w")
+    log.write(f"Data treated: {input} \n")
     log.write(f"Grounding duration:  {str(grd)}\n")
     log.write(f"Solving duration:  {str(slv)}\n")
     log.write(f"Total duration:  {str(tot)}\n")
@@ -79,8 +84,8 @@ try:
     log.write("\n" + "\n")
     log.close()
 except TimeoutException:
-    log = open(f"{path}/experimental_results/results/log_pref_all_{data_name}_{method}_{conf_type}.lp" , "w")
-    log.write(f"Data treated: {data} \n")
+    log = open(log_path , "w")
+    log.write(f"Data treated: {input}} \n")
     log.write(f"Grounding duration:  t.o. \n")
     log.write(f"Solving duration:  t.o. \n")
     log.write(f"Total duration:  t.o.\n")

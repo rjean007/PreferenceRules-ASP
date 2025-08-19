@@ -1,4 +1,5 @@
 import os
+import clingo
 import copy
 import time
 import signal
@@ -9,7 +10,6 @@ class TimeoutException(Exception):
 def handler(signum, frame):
     raise TimeoutException()
 
-# Définir le timeout
 signal.signal(signal.SIGALRM, handler)
 
 
@@ -17,22 +17,61 @@ signal.signal(signal.SIGALRM, handler)
 def d_name(n): return(n.split("_meta.lp")[0])
 
 path = os.getcwd()
-data_list = ["u1conf1_meta.lp"]
-conf_type_list = ["binary", "non_binary"]
+conf_type = "non_binary"  #choose one from "binary" and "non_binary"
 
-def parse_relations(file_path):
+conf_queries = f"{path}/queries/conflicts/conflictQueries.lp" #your conflict queries lp file path
+conf_queries_non_binary = f"{path}/queries/conflicts/conflitNonBinaire.lp" #your conflict queries lp file path
+
+input = f"{path}/data/u1conf1_meta.lp" #your data lp file path
+output = f"{path}/conflicts/u1conf1_conf_{conf_type}_minPython.lp" #your output file path
+log_path =  f"{path}/experimental_results/results/log_conf_{conf_type}_u1conf1.lp"  #your log file path
+
+
+
+
+with open(conf_queries , "r") as conflict_queries:
+    conflicts = conflict_queries.read()
+
+
+with open(conf_queries_non_binary , "r") as conflict_queries:
+    conflicts += conflict_queries.read()
+
+
+with open(input, "r") as univ:
+    program = univ.read()
+
+
+
+
+def test(inst, prog): 
+    ctl = clingo.Control()
+    ctl.add("base", [], inst)
+    ctl.add("base", [], prog)
+
+    tps1 = time.time()
+    ctl.ground([("base", [])])
+    tps2 = time.time()
+    ctl.configuration.solve.models="1"
+    tps3 = time.time()
+    with ctl.solve(yield_=True) as handle:
+        tps4 = time.time()
+        grounding = tps2 - tps1
+        solving = tps4 - tps3
+        for model in handle:
+            return(model.symbols(atoms=True), grounding, solving)       
+
+def parse_relations(file):
     conflicts = set()
     nb_conf_init = 0
-    with open(file_path, 'r') as file:
-        for line in file:
-            line = line.strip().rstrip('.')
-            if line.startswith("conf_init("):
-                nb_conf_init += 1
-                parts = line[len("conf_init(")+1:-2].split(",")
-                conf = tuple(sorted(int(x) for x in parts))
-                conflicts.add(conf)
+    
+    for line in file:
+        line = line.strip().rstrip('.')
+        if line.startswith("conf_init("):
+            nb_conf_init += 1
+            parts = line[len("conf_init(")+1:-2].split(",")
+            conf = tuple(sorted(int(x) for x in parts))
+            conflicts.add(conf)
     return [frozenset(conf) for conf in conflicts], nb_conf_init
-
 
 def write_conf(conflicts, file_path):
    
@@ -44,9 +83,7 @@ def write_conf(conflicts, file_path):
             lines.extend(f"inConf({conf_str}, {x}).\n" for x in conf)
         file.writelines(lines)
 
-
-
-def minimization(conflicts):
+def minimization_binary(conflicts):
     sorted_conflicts = sorted(conflicts, key=len, reverse=True)
     removed = []
 
@@ -57,30 +94,54 @@ def minimization(conflicts):
                     removed.append(c2)
     return [list(conf) for conf in sorted_conflicts if conf not in removed]
 
+def minimization_non_binary(conflicts):
+    sorted_conflicts = sorted(conflicts, key=len)
+    kept = []
+    for c in sorted_conflicts:
+        if not any(k < c for k in kept):
+            kept.append(c)
+
+    return [list(conf) for conf in kept]
 
 
-for type in conf_type_list:
-    for data in data_list:
 
-        data_name = d_name(data)
-            
-        tps1 = time.time()
+model, grd, slv = test(conflicts, program)
 
-        conf, nb_conf_init = parse_relations(f"{path}/conflicts/{data_name}_conf_init_{type}.lp")
+conf_file_raw =  str(model).split(", ")
+conf_file = ""
 
-        conf_min = minimization(conf)
 
-        write_conf(conf_min, f"{path}/conflicts/{data_name}_conf_{type}_minPython.lp" )
+if conf_file_raw[0][1:5] == "conf" or conf_file_raw[0][1:7] == "inConf":
+    conf_file+= conf_file_raw[0][1:] + "." + "\n"
 
-        tps2 = time.time()
-        duration = tps2 - tps1
+for i in conf_file_raw[1:-1]:
+    if i[0:4] == "conf" or i[0:6] == "inConf":
+        conf_file+= i + "." + "\n"
 
-        log = open(f"{path}/experimental_results/results/log_conf_minPython_{type}_{data_name}.lp" , "w")
-        log.write(f"Data treated: {data} \n")
-        log.write(f"Duration: {duration} \n")
-        log.write(f"Number of conf_init: {nb_conf_init}\n")            
-        log.write(f"Number of minimal conflicts: {len(conf_min)}")
-        log.write("\n" + "\n")
-        log.close()
+if conf_file_raw[-1][0:4] == "conf" or conf_file_raw[-1][0:6] == "inConf":
+    conf_file+= conf_file_raw[-1][:-1]+ "." + "\n"
 
-        
+    
+tps1 = time.time()
+
+conf, nb_conf_init = parse_relations(conf_file)
+
+if conf_type == "binary":
+    conf_min = minimization_binary(conf)
+elif conf_type == "non_binary":
+    conf_min = minimization_non_binary(conf)
+
+write_conf(conf_min, output)
+
+tps2 = time.time()
+duration = tps2 - tps1
+
+log = open(log_path, "w")
+log.write(f"Data treated: {input} \n")
+log.write(f"Grounding duration: {grd} \n")
+log.write(f"Solving duration: {slv} \n")
+log.write(f"Number of conf_init: {nb_conf_init}\n \n")            
+log.write(f"Minimization duration: {duration} \n")
+log.write(f"Number of minimal conflicts: {len(conf_min)}")
+log.close()
+

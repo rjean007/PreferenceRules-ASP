@@ -13,7 +13,7 @@ gamma_plus(X, Y, K) :- level(I), level(K), pref_init(X, Y, I), trans_cl_bis(Y, X
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%Reachability within tilde(R)\setminus Gamma^k(\emptyset)⁺
+%Reachability within \succ_Sigma\setminus Gamma^k(\emptyset)⁺
 
 trans_cl(X, Y, I, K) :- level(I), level(K), pref_init(X, Y, I), not gamma_plus(X, Y, K), K>1.
 trans_cl(X, Y, I, K) :- level(I), level(J), level(K), trans_cl(X, Y, J, K), J<=I, not gamma_plus(X, Y, K), K>1.
