@@ -104,14 +104,14 @@ Query answering
 
 
 ## Directories:
-lp_programs contains the lp programs for each tasks considered
-input/attacks contains the lp file representing the attack relation over the assertions
-input/conflict_queries contains the lp file with the conflict queries
-input/data contains the lp file with the data (enriched with the meta data)
-input/potential_answers contains the potential answers to the queries considered
-input/preference_rules contains the lp file with the preference rules
-output/conflicts contains the minimal conflicts computed by conflict_minimization.py
-output/log contains the logs for all of the pograms
-output/priority_relation contains the priority relation computed by preference_computation.py
+- `lp_programs` contains the lp programs for each tasks considered.
+- `input/attacks` contains the lp file representing the attack relation over the assertions.
+- `input/conflict_queries` contains the lp file with the conflict queries.
+- `input/data` contains the lp file with the data (enriched with the meta data).
+- `input/potential_answers` contains the potential answers to the queries considered.
+- `input/preference_rules` contains the lp file with the preference rules.
+- `output/conflicts` contains the minimal conflicts computed by conflict_minimization.py
+- `output/log` contains the logs for all of the pograms.
+- `output/priority_relation` contains the priority relation computed by preference_computation.py
 
 
