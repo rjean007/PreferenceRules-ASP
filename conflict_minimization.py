@@ -17,12 +17,8 @@ def d_name(n): return(n.split("_meta.lp")[0])
 
 
 
-with open(p.conf_queries , "r") as conflict_queries:
+with open(p.conf_queries, "r") as conflict_queries:
     conflicts = conflict_queries.read()
-
-
-with open(p.conf_queries_non_binary , "r") as conflict_queries:
-    conflicts += conflict_queries.read()
 
 
 with open(p.input, "r") as univ:
