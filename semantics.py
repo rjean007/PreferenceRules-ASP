@@ -81,6 +81,7 @@ try:
     potAns = os.listdir(p.query_potAns)
     tps1 = time.time()
     cpt_sat, cpt_unsat = 0,0
+    answers = []
     l = len(potAns)
     c = 0
     log = open(p.output_qa , "w")
@@ -108,9 +109,12 @@ try:
     
         if str(sat) == "SAT":
             cpt_sat += 1
+            if p.sem == "brave":
+                answers.append(cause.split("_")[0])
         elif str(sat) == "UNSAT":
             cpt_unsat += 1
-
+            if p.sem == "AR":
+                answers.append(cause.split("_")[0])
     tps2 = time.time()
     tot_time = tps2 - tps1
     log.write(f"Data treated: {p.input} \n")
@@ -118,6 +122,7 @@ try:
     log.write(f"Total time: {tot_time} \n")
     log.write(f"Total number of SAT: {cpt_sat} \n")
     log.write(f"Total number of UNSAT: {cpt_unsat} \n")
+    log.write(str(answers))
     log.close()
 except TimeoutException:
     log = open(p.output_qa , "w")
@@ -126,4 +131,5 @@ except TimeoutException:
     log.write(f"Duration:  t.o. \n")
     log.write(f"\n" + "\n")
     log.close()
+    
 
