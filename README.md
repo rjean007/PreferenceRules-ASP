@@ -55,7 +55,7 @@ The program takes as input 4 lp files:
 
 - A priority relation
 
-- The query potantial answers 
+- The query potential answers 
 
 - (Optionnal) The attack relation in the case it has been precomputed.
 
@@ -85,7 +85,7 @@ Conflicts
 Query & potential answers
 - *query*: your query name
 - *query_path*: your query file path
-- *query_potAns*: your query potantial answers folder path
+- *query_potAns*: your query potential answers folder path
 - *log_potAns*: your log file path for the potential answers computation
 
 Priority relation
