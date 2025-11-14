@@ -2,6 +2,8 @@
 
 We describe here how to use the implementation of the algorithms presented the KR 2025 paper available on [arXiv](https://arxiv.org/abs/2508.07742). 
 
+The datasets used in the experiments are available here https://zenodo.org/records/17595953.
+
 ## Description
 
 The implementation is divided into differents parts as follows: 
