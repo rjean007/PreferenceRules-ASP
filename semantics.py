@@ -84,7 +84,7 @@ try:
     answers = []
     l = len(potAns)
     c = 0
-    log = open(p.output_qa , "w")
+    log = open(p.log_qa , "w")
     log.write(f"Semantics selected: " + p.sem + " with " + p.rep + " repairs.\n")
     for cause in potAns:
         c += 1
@@ -122,10 +122,13 @@ try:
     log.write(f"Total time: {tot_time} \n")
     log.write(f"Total number of SAT: {cpt_sat} \n")
     log.write(f"Total number of UNSAT: {cpt_unsat} \n")
-    log.write(str(answers))
     log.close()
+    answer_file = open(p.output_qa , "w")
+    for answer in answers:
+    	answer_file.write(answer + "\n")
+    answer_file.close()
 except TimeoutException:
-    log = open(p.output_qa , "w")
+    log = open(p.log_qa , "w")
     log.write(f"Data treated: {p.input} \n")
     log.write(f"Query treated: {p.query_potAns}. \n")
     log.write(f"Duration:  t.o. \n")
