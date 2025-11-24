@@ -1,0 +1,7 @@
+Data treated: /home/robin/Documents/PreferenceRules-ASP/input/data/u1conf1.lp 
+Grounding duration:  2.9816677570343018
+Solving duration:  27.839024305343628
+Total duration:  30.82076358795166
+Number of pref_init: 7068
+Number of pref: 3041
+

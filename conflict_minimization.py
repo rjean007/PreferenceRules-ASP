@@ -55,7 +55,6 @@ def parse_relations(file):
             parts = line[len("conf_init(")+1:-2].split(",")
             conf = tuple(sorted(int(x) for x in parts))
             conflicts.add(conf)
-            print(conf)
     return [frozenset(conf) for conf in conflicts], nb_conf_init
 
 def write_conf(conflicts, file_path):

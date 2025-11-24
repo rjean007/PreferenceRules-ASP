@@ -1,0 +1,6 @@
+Semantics selected: brave with pareto repairs.
+Data treated: /home/robin/Documents/PreferenceRules-ASP/input/data/u1conf1.lp 
+Query treated: /home/robin/Documents/PreferenceRules-ASP/input/potential_answers/u1conf1/q5. 
+Total time: 1.0428235530853271 
+Total number of SAT: 0 
+Total number of UNSAT: 10 

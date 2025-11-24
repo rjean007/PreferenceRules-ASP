@@ -1,0 +1,7 @@
+Data treated: /home/robin/Documents/PreferenceRules-ASP/input/data/u1conf1.lp 
+Grounding duration: 1.546269178390503 
+Solving duration: 0.06883788108825684 
+Number of conf_init: 2558
+ 
+Minimization duration: 0.0930328369140625 
+Number of minimal conflicts: 2354

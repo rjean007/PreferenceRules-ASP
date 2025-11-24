@@ -41,12 +41,6 @@ def d_name(n): return(n.split("_meta.lp")[0])
 program = ""
 
 if(p.sem != "IAR"):
-
-    if p.attack == "":
-        attacks = open(f"{path}/lp_programs/attacked_assertions.lp", "r")
-        program += "\n" + attacks.read()
-        attacks.close()
-
     rep_file = open(f"{path}/lp_programs/local_"+ p.rep + "_extensible.lp", "r")
     program += "\n" + rep_file.read()
     rep_file.close()
@@ -73,6 +67,22 @@ else:
     program = prog.read()
     prog.close()
 
+if p.attack != "":
+    expl = open(p.attack, "r")
+    program += expl.read()
+    expl.close()
+elif p.attack == "":
+    attacks = open(f"{path}/lp_programs/attacked_assertions.lp", "r")
+    program += "\n" + attacks.read()
+    attacks.close()
+
+    prio = open(p.priority_relation, "r")
+    program += prio.read()
+    prio.close()
+
+expl = open(p.conflicts, "r")
+program += expl.read()
+expl.close()
 
 
 
@@ -89,16 +99,6 @@ try:
     for cause in potAns:
         c += 1
         example = ""
-
-        if p.attack != "":
-            expl = open(p.attack, "r")
-            example += expl.read()
-            expl.close()
-
-
-        expl = open(p.conflicts, "r")
-        example += expl.read()
-        expl.close()
 
         causes = open(f"{p.query_potAns}/{cause}", "r")
         example += causes.read()
@@ -125,8 +125,9 @@ try:
     log.close()
     answer_file = open(p.output_qa , "w")
     for answer in answers:
-    	answer_file.write(answer + "\n")
+        answer_file.write(answer + "\n")
     answer_file.close()
+
 except TimeoutException:
     log = open(p.log_qa , "w")
     log.write(f"Data treated: {p.input} \n")
