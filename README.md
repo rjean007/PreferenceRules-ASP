@@ -9,6 +9,8 @@ The datasets used in the experiments are available here https://zenodo.org/recor
 The implementation is divided into differents parts as follows: 
 
 ### Conflict computation
+Prgoram: conflict_minimization.py
+
 Input:
 The program takes as input 2 lp files:
 
@@ -21,12 +23,14 @@ An lp file containing the minimal conflicts.
 
 
 ### Potential answers computation:
+Program: potential_answers.py
+
 Input:
 The program takes as input 2 lp files:
 
 - One for the data (enriched with meta data)
 
-- One for the potential answers queries
+- One for the queries
 
 Output:
 A folder with one lp file per potential answer containing the causes.  
@@ -34,6 +38,8 @@ A folder with one lp file per potential answer containing the causes.
 
 
 ### Priority relation computation:
+Program: preference_computation.py
+
 Input:
 The program takes as input 3 lp files:
 
@@ -48,6 +54,8 @@ An lp file containing the computed priority relation.
 
 
 ### Query answers computation:
+Program: semantics.py
+
 Input:
 The program takes as input 4 lp files:
 
@@ -61,8 +69,8 @@ The program takes as input 4 lp files:
 
 - (Optionnal) The attack relation in the case it has been precomputed.
 
-Output:
-The answers to the query.
+Output: 
+The answers to the query under the semantics specified in parameters.py.
 
 
 
@@ -110,7 +118,7 @@ Query answering
 - `input/attacks` contains the lp file representing the attack relation over the assertions.
 - `input/conflict_queries` contains the lp file with the conflict queries.
 - `input/data` contains the lp file with the data (enriched with the meta data).
-- `input/potential_answers` contains the potential answers to the queries considered.
+- `input/potential_answers` contains the potential answers to the queries considered. They can be computed by the program potential_answers.py.
 - `input/preference_rules` contains the lp file with the preference rules.
 - `output/conflicts` contains the minimal conflicts computed by conflict_minimization.py
 - `output/log` contains the logs for all of the pograms.
