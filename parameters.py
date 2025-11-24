@@ -33,4 +33,5 @@ log_pref =  f"{path}/output/log/log_pref_a_{data}_{method}.txt"  #your log file 
 rep = "pareto"    #choose either "completion" or "pareto"
 sem = "brave" #choose either "AR" or "brave"
 attack = f"" #your attack relation file path if pre-computed "" otherwise
-output_qa = f"{path}/output/log/log_sem_{data}_{rep}_{sem}_{query}.txt" #your output file path
+log_qa = f"{path}/output/log/log_sem_{data}_{rep}_{sem}_{query}.txt" #your log file path
+output_qa = f"{path}/output/answers/{data}_{rep}_{sem}_{query}.txt" #your output file path
