@@ -9,7 +9,7 @@ The datasets used in the experiments are available here https://zenodo.org/recor
 The implementation is divided into differents parts as follows: 
 
 ### Conflict computation
-Prgoram: conflict_minimization.py
+Program: conflict_minimization.py
 
 Input:
 The program takes as input 2 lp files:
